@@ -310,6 +310,7 @@ nnoremap <silent> <leader>xx <cmd>TroubleToggle<cr>
 nnoremap <silent> <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> gr    <cmd>lua require('telescope.builtin').lsp_references{}<CR>
 nnoremap <silent> gd    <cmd>lua require('telescope.builtin').lsp_implementations{}<CR>
+nnoremap <silent> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
 
 " bufferline
 nnoremap <silent> <leader>gb <cmd>BufferLinePick<CR>
