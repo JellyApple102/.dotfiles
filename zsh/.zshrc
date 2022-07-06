@@ -8,6 +8,9 @@ export RANGER_LOAD_DEFAULT_RC=false
 # jdtls -- https://github.com/eruizc-dev/jdtls-launcher
 export PATH=/opt/homebrew/bin:$PATH:$HOME/.local/bin
 
+# get homebrew ncurses into pkg-config
+export PKG_CONFIG_PATH=/opt/homebrew/opt/ncurses/lib/pkgconfig
+
 alias zeus="ssh jcarryer@zeus.vse.gmu.edu"
 tabs -4 # tabstop
 
