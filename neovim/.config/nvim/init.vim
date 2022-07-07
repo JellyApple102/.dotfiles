@@ -24,7 +24,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'folke/trouble.nvim'
-Plug 'ggandor/lightspeed.nvim'
+Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'petertriho/nvim-scrollbar'
 Plug 'akinsho/toggleterm.nvim', {'tag' : 'v1.*'}
@@ -296,6 +296,11 @@ nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
+
+" pounce
+nnoremap <silent> s <cmd>Pounce<CR>
+nnoremap <silent> S <cmd>PounceRepeat<CR>
+vnoremap <silent> s <cmd>Pounce<CR>
 
 " telescope
 nnoremap <silent> ff <cmd>Telescope find_files<Cr>
