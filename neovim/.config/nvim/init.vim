@@ -151,11 +151,9 @@ require('lspconfig').tsserver.setup{}
 EOF
 
 " completion
-
 set completeopt=menuone,noinsert,noselect
 
 lua << EOF
-
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -224,6 +222,54 @@ cmp.event:on(
   'confirm_done',
   cmp_autopairs.on_confirm_done()
 )
+
+local npairs = require('nvim-autopairs')
+local Rule = require('nvim-autopairs.rule')
+local cond = require('nvim-autopairs.conds')
+
+npairs.add_rules {
+  -- angle brcket rule
+  Rule('<', '>')
+    :with_move(function(opts) return opts.char == '>' end),
+
+  -- space padding rules
+  Rule(' ', ' ')
+    :with_pair(function(opts)
+      local pair = opts.line:sub(opts.col - 1, opts.col)
+      return vim.tbl_contains({ '()', '{}', '[]', '<>' }, pair)
+    end)
+    :with_move(cond.none())
+    :with_cr(cond.none())
+    :with_del(function(opts)
+      local col = vim.api.nvim_win_get_cursor(0)[2]
+      local context = opts.line:sub(col - 1, col + 2)
+      return vim.tbl_contains({ '(  )', '{  }', '[  ]', '<  >' }, context)
+    end),
+  Rule('', ' )')
+    :with_pair(cond.none())
+    :with_move(function(opts) return opts.char == ')' end)
+    :with_cr(cond.none())
+    :with_del(cond.none())
+    :use_key(')'),
+  Rule('', ' }')
+    :with_pair(cond.none())
+    :with_move(function(opts) return opts.char == '}' end)
+    :with_cr(cond.none())
+    :with_del(cond.none())
+    :use_key('}'),
+  Rule('', ' ]')
+    :with_pair(cond.none())
+    :with_move(function(opts) return opts.char == ']' end)
+    :with_cr(cond.none())
+    :with_del(cond.none())
+    :use_key(']'),
+  Rule('', ' >')
+    :with_pair(cond.none())
+    :with_move(function(opts) return opts.char == '>' end)
+    :with_cr(cond.none())
+    :with_del(cond.none())
+    :use_key('>')
+}
 EOF
 
 " gitsigns
