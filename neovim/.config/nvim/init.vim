@@ -1,8 +1,6 @@
 " plugins
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'folke/tokyonight.nvim', {'branch': 'main'}
-Plug 'navarasu/onedark.nvim'
 Plug 'rebelot/kanagawa.nvim'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'akinsho/bufferline.nvim'
@@ -28,13 +26,11 @@ Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'petertriho/nvim-scrollbar'
 Plug 'akinsho/toggleterm.nvim', {'tag' : 'v1.*'}
+Plug 'SmiteshP/nvim-navic'
 
 call plug#end()
 
 set termguicolors
-let g:tokyonight_style = "night"
-let g:tokyonight_italic_keywords = 0
-
 colorscheme kanagawa
 
 " telescope
@@ -50,13 +46,25 @@ require('telescope').setup {
 require('telescope').load_extension('ui-select')
 EOF
 
+" navic
+lua << EOF
+require('nvim-navic').setup{}
+EOF
+
 " lualine
 lua << EOF
+local navic = require('nvim-navic')
+
 require('lualine').setup {
     options = {
         theme = 'kanagawa'
     },
-    tabline = {}
+    tabline = {},
+    sections = {
+        lualine_c = {
+            { navic.get_location, cond = navic.is_available },
+        }
+    }
 }
 EOF
 
@@ -84,9 +92,16 @@ EOF
 
 " LSP
 lua << EOF
-require'lspconfig'.jedi_language_server.setup{}
+require'lspconfig'.jedi_language_server.setup{
+    on_attach = function(client, bufnr)
+        require('nvim-navic').attach(client, bufnr)
+    end
+}
 
 require'lspconfig'.jdtls.setup{
+    on_attach = function(client, bufnr)
+        require('nvim-navic').attach(client, bufnr)
+    end,
     cmd = { 'jdtls' },
     root_dir = function(fname)
         return require'lspconfig'.util.root_pattern('pom.xml', 'gradel.build', '.git')(fname) or vim.fn.getcwd()
@@ -99,6 +114,9 @@ lua << EOF
 local lspconfig = require'lspconfig'
 local util = lspconfig.util
 lspconfig.ccls.setup {
+    on_attach = function(client, bufnr)
+        require('nvim-navic').attach(client, bufnr)
+    end,
     init_options = {
         compilationDatabaseDirectory = "build";
         index = {
@@ -126,6 +144,9 @@ local opts = {
         },
     },
     server = {
+        on_attach = function(client, bufnr)
+            require('nvim-navic').attach(client, bufnr)
+        end,
         settings = {
             ["rust-analyzer"] = {
                 checkOnSave = {
@@ -139,7 +160,7 @@ require('rust-tools').setup(opts) -- opts
 EOF
 
 lua << EOF
-local signs = { Error = " ", Warning = " ", Hint = " ", Information = " ", }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " ", }
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -228,10 +249,6 @@ local Rule = require('nvim-autopairs.rule')
 local cond = require('nvim-autopairs.conds')
 
 npairs.add_rules {
-  -- angle brcket rule
-  Rule('<', '>')
-    :with_move(function(opts) return opts.char == '>' end),
-
   -- space padding rules
   Rule(' ', ' ')
     :with_pair(function(opts)
@@ -263,12 +280,6 @@ npairs.add_rules {
     :with_cr(cond.none())
     :with_del(cond.none())
     :use_key(']'),
-  Rule('', ' >')
-    :with_pair(cond.none())
-    :with_move(function(opts) return opts.char == '>' end)
-    :with_cr(cond.none())
-    :with_del(cond.none())
-    :use_key('>')
 }
 EOF
 
@@ -330,7 +341,7 @@ syntax enable
 filetype plugin indent on
 
 " cursorline
-hi clear CursorLine
+" hi clear CursorLine
 hi CursorLine guibg=#24242e
 set cursorline
 
