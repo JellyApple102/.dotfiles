@@ -6,7 +6,10 @@ export VISUAL=nvim;
 export RANGER_LOAD_DEFAULT_RC=false
 
 # jdtls -- https://github.com/eruizc-dev/jdtls-launcher
-export PATH=/opt/homebrew/bin:$PATH:$HOME/.local/bin
+# export PATH=/opt/homebrew/bin:$PATH:$HOME/.local/bin
+
+export PATH=/opt/homebrew/bin:$PATH
+# export PATH=$HOME/Library/java/jdt-language-server-1.15.0-202208300645/bin:$PATH
 
 # get homebrew ncurses into pkg-config
 export PKG_CONFIG_PATH=/opt/homebrew/opt/ncurses/lib/pkgconfig
