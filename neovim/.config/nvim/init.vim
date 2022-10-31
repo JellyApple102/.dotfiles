@@ -6,7 +6,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'akinsho/bufferline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'windwp/nvim-autopairs'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
@@ -21,11 +21,13 @@ Plug 'onsails/lspkind-nvim'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'mfussenegger/nvim-jdtls'
+Plug 'aca/emmet-ls'
 Plug 'folke/trouble.nvim'
 Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'petertriho/nvim-scrollbar'
-Plug 'akinsho/toggleterm.nvim', {'tag' : 'v1.*'}
+Plug 'akinsho/toggleterm.nvim', { 'tag' : 'v2.*' }
 Plug 'SmiteshP/nvim-navic'
 
 call plug#end()
@@ -98,15 +100,22 @@ require'lspconfig'.jedi_language_server.setup{
     end
 }
 
-require'lspconfig'.jdtls.setup{
-    on_attach = function(client, bufnr)
-        require('nvim-navic').attach(client, bufnr)
-    end,
-    cmd = { 'jdtls' },
-    root_dir = function(fname)
-        return require'lspconfig'.util.root_pattern('pom.xml', 'gradel.build', '.git')(fname) or vim.fn.getcwd()
-    end
-}
+-- require'lspconfig'.jdtls.setup{
+--     on_attach = function(client, bufnr)
+--         require('nvim-navic').attach(client, bufnr)
+--     end,
+--     cmd = { 'jdtls' },
+--     root_dir = function(fname)
+--         return require'lspconfig'.util.root_pattern('pom.xml', 'gradel.build', '.git')(fname) or vim.fn.getcwd()
+--     end,
+--     init_options = {
+--         extendedClientCapabilities = {
+--             progressReportProvider = false,
+--         },
+--     },
+-- }
+
+-- require('lspconfig').jdtls.setup{}
 EOF
 
 " ccls
@@ -159,6 +168,26 @@ local opts = {
 require('rust-tools').setup(opts) -- opts
 EOF
 
+" emmet-ls
+lua << EOF
+local lspconfig = require('lspconfig')
+local configs = require('lspconfig/configs')
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+lspconfig.emmet_ls.setup({
+    capabilities = capabilities,
+    filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less' },
+    init_options = {
+        html = {
+            options = {
+                ["bem.enabled"] = true,
+            },
+        },
+    }
+})
+EOF
+
 lua << EOF
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " ", }
 for type, icon in pairs(signs) do
@@ -198,6 +227,8 @@ cmp.setup {
     ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
             cmp.select_next_item(select_opts)
+        elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
         elseif has_words_before() then
             cmp.complete()
         else
@@ -208,6 +239,8 @@ cmp.setup {
     ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
             cmp.select_prev_item(select_opts)
+        elseif luasnip.jumpable(-1) then
+            luasnip.jump(-1)
         else
             fallback()
         end
@@ -305,7 +338,11 @@ EOF
 
 " fidget
 lua << EOF
-require("fidget").setup{}
+require("fidget").setup{
+    text = {
+        spinner = "dots"
+    }
+}
 EOF
 
 " toggleterm
