@@ -27,7 +27,7 @@ Plug 'folke/trouble.nvim'
 Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'petertriho/nvim-scrollbar'
-Plug 'akinsho/toggleterm.nvim', { 'tag' : 'v2.*' }
+Plug 'akinsho/toggleterm.nvim'
 Plug 'SmiteshP/nvim-navic'
 
 call plug#end()
