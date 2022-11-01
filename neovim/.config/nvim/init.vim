@@ -7,6 +7,7 @@ Plug 'akinsho/bufferline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
@@ -17,8 +18,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
-Plug 'onsails/lspkind-nvim'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'onsails/lspkind-nvim'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-jdtls'
@@ -28,7 +29,6 @@ Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'petertriho/nvim-scrollbar'
 Plug 'akinsho/toggleterm.nvim'
-Plug 'SmiteshP/nvim-navic'
 
 call plug#end()
 
@@ -48,25 +48,13 @@ require('telescope').setup {
 require('telescope').load_extension('ui-select')
 EOF
 
-" navic
-lua << EOF
-require('nvim-navic').setup{}
-EOF
-
 " lualine
 lua << EOF
-local navic = require('nvim-navic')
-
 require('lualine').setup {
     options = {
         theme = 'kanagawa'
     },
     tabline = {},
-    sections = {
-        lualine_c = {
-            { navic.get_location, cond = navic.is_available },
-        }
-    }
 }
 EOF
 
@@ -90,32 +78,15 @@ require('nvim-treesitter.configs').setup {
         additional_vim_regex_highlighting = false
     }
 }
+
+require('treesitter-context').setup{}
 EOF
 
-" LSP
+" LSP general
 lua << EOF
-require'lspconfig'.jedi_language_server.setup{
-    on_attach = function(client, bufnr)
-        require('nvim-navic').attach(client, bufnr)
-    end
-}
+require'lspconfig'.jedi_language_server.setup{}
 
--- require'lspconfig'.jdtls.setup{
---     on_attach = function(client, bufnr)
---         require('nvim-navic').attach(client, bufnr)
---     end,
---     cmd = { 'jdtls' },
---     root_dir = function(fname)
---         return require'lspconfig'.util.root_pattern('pom.xml', 'gradel.build', '.git')(fname) or vim.fn.getcwd()
---     end,
---     init_options = {
---         extendedClientCapabilities = {
---             progressReportProvider = false,
---         },
---     },
--- }
-
--- require('lspconfig').jdtls.setup{}
+require('lspconfig').tsserver.setup{}
 EOF
 
 " ccls
@@ -123,9 +94,6 @@ lua << EOF
 local lspconfig = require'lspconfig'
 local util = lspconfig.util
 lspconfig.ccls.setup {
-    on_attach = function(client, bufnr)
-        require('nvim-navic').attach(client, bufnr)
-    end,
     init_options = {
         compilationDatabaseDirectory = "build";
         index = {
@@ -135,7 +103,6 @@ lspconfig.ccls.setup {
             excludeArgs = { "-frounding-math" };
         };
     },
-    --root_dir = util.root_pattern("compile_commands.json", ".ccls", ".git") or dirname
 }
 EOF
 
@@ -153,9 +120,6 @@ local opts = {
         },
     },
     server = {
-        on_attach = function(client, bufnr)
-            require('nvim-navic').attach(client, bufnr)
-        end,
         settings = {
             ["rust-analyzer"] = {
                 checkOnSave = {
@@ -188,16 +152,13 @@ lspconfig.emmet_ls.setup({
 })
 EOF
 
+" set lsp diagnostic symbols
 lua << EOF
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " ", }
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
-EOF
-
-lua << EOF
-require('lspconfig').tsserver.setup{}
 EOF
 
 " completion
@@ -210,7 +171,7 @@ local has_words_before = function()
 end
 
 local luasnip = require'luasnip'
-local cmp = require 'cmp'
+local cmp = require'cmp'
 local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup {
@@ -355,6 +316,7 @@ EOF
 
 " general settings
 set number
+set relativenumber
 set nowrap
 set autoindent
 set tabstop=4
@@ -371,14 +333,10 @@ set shortmess+=c
 set updatetime=300
 set scrolloff=5
 set sidescrolloff=5
-" set sessionoptions+=winpos,terminal
-" set list
-" set listchars=tab:\|\ ,eol:↴,trail:·
 syntax enable
 filetype plugin indent on
 
 " cursorline
-" hi clear CursorLine
 hi CursorLine guibg=#24242e
 set cursorline
 
