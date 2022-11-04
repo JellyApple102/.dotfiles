@@ -3,7 +3,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'rebelot/kanagawa.nvim'
 Plug 'hoob3rt/lualine.nvim'
-Plug 'akinsho/bufferline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
@@ -12,6 +11,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
@@ -24,10 +24,8 @@ Plug 'L3MON4D3/LuaSnip'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'aca/emmet-ls'
-Plug 'folke/trouble.nvim'
 Plug 'rlane/pounce.nvim'
 Plug 'j-hui/fidget.nvim'
-Plug 'petertriho/nvim-scrollbar'
 Plug 'akinsho/toggleterm.nvim'
 
 call plug#end()
@@ -46,6 +44,7 @@ require('telescope').setup {
 }
 
 require('telescope').load_extension('ui-select')
+require('telescope').load_extension('fzf')
 EOF
 
 " lualine
@@ -55,18 +54,6 @@ require('lualine').setup {
         theme = 'kanagawa'
     },
     tabline = {},
-}
-EOF
-
-" bufferline
-lua << EOF
-require("bufferline").setup{
-    options = {
-        diagnostics = "nvim_lsp",
-        show_buffer_close_icons = false,
-        show_close_icon = false,
-        persist_buffer_sort = true,
-    }
 }
 EOF
 
@@ -84,7 +71,7 @@ EOF
 
 " LSP general
 lua << EOF
-require'lspconfig'.jedi_language_server.setup{}
+require('lspconfig').jedi_language_server.setup{}
 
 require('lspconfig').tsserver.setup{}
 EOF
@@ -111,22 +98,11 @@ lua << EOF
 local nvim_lsp = require'lspconfig'
 local opts = {
     tools = {
-        autoSetHints = true,
-        hover_with_actions = true,
         inlay_hints = {
             show_parameter_hints = true,
             parameter_hints_prefix = "",
             other_hints_prefix = "",
         },
-    },
-    server = {
-        settings = {
-            ["rust-analyzer"] = {
-                checkOnSave = {
-                    command = "clippy"
-                },
-            }
-        }
     },
 }
 require('rust-tools').setup(opts) -- opts
@@ -175,6 +151,9 @@ local cmp = require'cmp'
 local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup {
+  view = {
+    entries = { name = "custom", selection_order = "near_cursor" }
+  },
   snippet = {
     expand = function(args)
       require('luasnip').lsp_expand(args.body)
@@ -282,21 +261,6 @@ lua << EOF
 require('gitsigns').setup()
 EOF
 
-" trouble
-lua << EOF
-require("trouble").setup {}
-EOF
-
-" scrollbar
-lua << EOF
-local colors = require("kanagawa.colors").setup()
-require("scrollbar").setup{
-    handle = {
-        color = colors.sumiInk3,
-    },
-}
-EOF
-
 " fidget
 lua << EOF
 require("fidget").setup{
@@ -341,6 +305,8 @@ hi CursorLine guibg=#24242e
 set cursorline
 
 " my mappings
+let mapleader=" "
+
 inoremap kj <Esc>
 inoremap jk <Esc>
 tnoremap <Esc> <C-\><C-n>
@@ -349,29 +315,29 @@ nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 
+" telescope for files and buffers
+nnoremap <silent> <leader>ff <cmd>Telescope find_files<Cr>
+nnoremap <silent> <leader>fb <cmd>Telescope buffers<Cr>
+
+" lsp shortcuts
+" line diagnositc and code actions
+nnoremap <silent> <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
+nnoremap <silent> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+
+" diagnostics in current buffer or all buffers
+nnoremap <silent> <leader>fd <cmd>lua require('telescope.builtin').diagnostics{ bufnr=0 }<CR>
+nnoremap <silent> <leader>fD <cmd>lua require('telescope.builtin').diagnostics{}<CR>
+
+" symbols in document or workspace
+nnoremap <silent> <leader>fs <cmd>lua require('telescope.builtin').lsp_document_symbols{}<CR>
+nnoremap <silent> <leader>fS <cmd>lua require('telescope.builtin').lsp_workspace_symbols{}<CR>
+
+" references, implementations, and definitions
+nnoremap <silent> <leader>gr <cmd>lua require('telescope.builtin').lsp_references{}<CR>
+nnoremap <silent> <leader>gi <cmd>lua require('telescope.builtin').lsp_implementations{}<CR>
+nnoremap <silent> <leader>gd <cmd>lua require('telescope.builtin').lsp_definitions{}<CR>
+
 " pounce
 nnoremap <silent> s <cmd>Pounce<CR>
 nnoremap <silent> S <cmd>PounceRepeat<CR>
 vnoremap <silent> s <cmd>Pounce<CR>
-
-" telescope
-nnoremap <silent> ff <cmd>Telescope find_files<Cr>
-nnoremap <silent> fb <cmd>Telescope buffers<Cr>
-nnoremap <silent> fg <cmd>Telescope live_grep<Cr>
-nnoremap <silent> fh <cmd>Telescope help_tags<Cr>
-
-" trouble
-nnoremap <silent> <leader>xx <cmd>TroubleToggle<cr>
-
-" lsp navigation shortcuts
-nnoremap <silent> <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
-nnoremap <silent> gr    <cmd>lua require('telescope.builtin').lsp_references{}<CR>
-nnoremap <silent> gd    <cmd>lua require('telescope.builtin').lsp_implementations{}<CR>
-nnoremap <silent> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
-
-" bufferline
-nnoremap <silent> <leader>gb <cmd>BufferLinePick<CR>
-nnoremap <silent> <leader>bl <cmd>BufferLineMoveNext<CR>
-nnoremap <silent> <leader>bh <cmd>BufferLineMovePrev<CR>
-nnoremap <silent> <C-l> <cmd>BufferLineCycleNext<CR>
-nnoremap <silent> <C-h> <cmd>BufferLineCyclePrev<CR>
