@@ -1,0 +1,7 @@
+require('packer-config')
+require('settings')
+require('lsp-configs')
+require('completion-config')
+require('autopairs-config')
+require('misc-configs')
+require('keymaps')
