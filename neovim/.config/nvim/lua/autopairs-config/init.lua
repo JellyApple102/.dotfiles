@@ -15,7 +15,7 @@ npairs.add_rules{
     -- space padding rules
     Rule(' ', ' ')
         :with_pair(function(opts)
-            local pair = opts.lone:sub(opts.col - 1, opts.col)
+            local pair = opts.line:sub(opts.col - 1, opts.col)
             return vim.tbl_contains({ '()', '{}', '[]', '<>' }, pair)
         end)
         :with_move(cond.none())
@@ -25,28 +25,22 @@ npairs.add_rules{
             local context = opts.line:sub(col - 1, col + 2)
             return vim.tbl_contains({ '(  )',  '{  }', '[  ]', '<  >' }, context)
         end),
-        Rule('', ' )')
-            :with_pair(cond.none())
-            :with_move(function(opts)
-                return opts.char == ')'
-            end)
-            :with_cr(cond.none())
-            :with_del(cond.none())
-            :use_key(')')
-        Rule('', '}')
-            :with_pair(cond.none())
-            :with_move(function(opts)
-                return opts.char == '}'
-            end)
-            :with_cr(cond.none())
-            :with_del(cond.none())
-            :use_key('}')
-        Rule('', ']')
-            :with_pair(cond.none())
-            :with_move(function(opts)
-                return opts.char == ']'
-            end)
-            :with_cr(cond.none())
-            :with_del(cond.none())
-            :use_key(']')
+    Rule('', ' )')
+        :with_pair(cond.none())
+        :with_move(function(opts) return opts.char == ')' end)
+        :with_cr(cond.none())
+        :with_del(cond.none())
+        :use_key(')'),
+    Rule('', '}')
+        :with_pair(cond.none())
+        :with_move(function(opts) return opts.char == '}' end)
+        :with_cr(cond.none())
+        :with_del(cond.none())
+        :use_key('}'),
+    Rule('', ']')
+        :with_pair(cond.none())
+        :with_move(function(opts) return opts.char == ']' end)
+        :with_cr(cond.none())
+        :with_del(cond.none())
+        :use_key(']'),
 }

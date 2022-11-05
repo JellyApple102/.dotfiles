@@ -3,11 +3,11 @@ return require('packer').startup(function(use)
 
     use { 'rebelot/kanagawa.nvim' }
     use {
-        'hoob3rt/lualine.nvim'
-        requires = { 'kyazdani42/nvim-webdev-icons', opt = true }
+        'hoob3rt/lualine.nvim',
+        requires = { 'kyazdani42/nvim-web-devicons' }
     }
-    use { 'lweris6991/gitsigns.nvim' }
-    use { 'windp/nvim-autopairs' }
+    use { 'lewis6991/gitsigns.nvim' }
+    use { 'windwp/nvim-autopairs' }
     use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
@@ -21,7 +21,7 @@ return require('packer').startup(function(use)
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'make'
     }
-    use { 'nvim-telsescope/telescope-ui-select.nvim' }
+    use { 'nvim-telescope/telescope-ui-select.nvim' }
     use { 'neovim/nvim-lspconfig' }
     use { 'simrat39/rust-tools.nvim' }
     use { 'mfussenegger/nvim-jdtls' }
@@ -33,7 +33,7 @@ return require('packer').startup(function(use)
         requires = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path,
+            'hrsh7th/cmp-path',
             'hrsh7th/cmp-nvim-lua',
             'saadparwaiz1/cmp_luasnip'
         }

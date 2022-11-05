@@ -6,8 +6,8 @@ require('telescope').setup{
         }
     }
 }
-require('telescope').load_extenstion('ui-select')
-require('telescopt').load_extenstion('fzf')
+require('telescope').load_extension('ui-select')
+require('telescope').load_extension('fzf')
 
 -- lualine
 require('lualine').setup{
@@ -19,7 +19,7 @@ require('lualine').setup{
 
 -- treesitter
 require('nvim-treesitter.configs').setup{
-    hihglight = {
+    highlight = {
         enable = true,
         additional_vim_regex_highlighting = false
     }
