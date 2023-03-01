@@ -14,6 +14,8 @@ export PATH=/opt/homebrew/bin:$PATH
 # get homebrew ncurses into pkg-config
 export PKG_CONFIG_PATH=/opt/homebrew/opt/ncurses/lib/pkgconfig
 
+alias note="nvim $(date +%m-%d-%y).txt"
+
 alias zeus="ssh jcarryer@zeus.vse.gmu.edu"
 tabs -4 # tabstop
 
