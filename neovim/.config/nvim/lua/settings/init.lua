@@ -22,6 +22,19 @@ opt.updatetime = 300
 opt.scrolloff = 5
 opt.sidescrolloff = 5
 opt.cursorline = true
-vim.cmd('colorscheme kanagawa')
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
+
+require('kanagawa').setup{
+    colors = {
+        theme = {
+            all = {
+                ui = {
+                    bg_gutter = 'none',
+                }
+            }
+        }
+    }
+}
+
+vim.cmd('colorscheme kanagawa')
