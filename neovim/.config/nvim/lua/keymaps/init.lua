@@ -12,6 +12,7 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', opts)
 -- telescope for files a buffers
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', opts)
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>', opts)
+vim.keymap.set('n', '<leader>fh', function() builtin.help_tags{} end, opts)
 
 -- lsp stuff
 -- line diagnositc and code action

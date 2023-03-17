@@ -1,5 +1,8 @@
 -- telescope
 require('telescope').setup{
+    defaults = {
+        layout_strategy = 'vertical'
+    },
     extenstions = {
         ['ui-select'] = {
             require('telescope.themes').get_dropdown{}
