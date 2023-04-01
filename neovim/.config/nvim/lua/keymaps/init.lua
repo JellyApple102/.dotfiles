@@ -8,6 +8,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', opts)
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', opts)
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', opts)
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', opts)
+vim.keymap.set('n', 'H', '<cmd>bp<CR>', opts)
+vim.keymap.set('n', 'L', '<cmd>bn<CR>', opts)
 
 -- telescope for files a buffers
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', opts)
@@ -36,3 +38,10 @@ vim.keymap.set('n', '<leader>gd', function() builtin.lsp_definitions{} end, opts
 vim.keymap.set('n', 's', '<cmd>Pounce<CR>', opts)
 vim.keymap.set('n', 'S', '<cmd>PounceRepeat<CR>', opts)
 vim.keymap.set('v', 's', '<cmd>Pounce<CR>', opts)
+
+-- easyread
+vim.keymap.set('n', '<leader>er', '<cmd>EasyreadToggle<CR>', opts)
+
+-- flote open and markdown todo toggle
+vim.keymap.set('n', '<leader>on', '<cmd>Flote<CR>', opts)
+vim.keymap.set('n', '<leader>tt', '<cmd>MkdnToggleToDo<CR>')

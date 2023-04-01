@@ -17,10 +17,8 @@ cmp.setup{
         end
     },
     mapping = {
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item(select_opts)
@@ -36,7 +34,7 @@ cmp.setup{
             if cmp.visible() then
                 cmp.select_prev_item(select_opts)
             elseif luasnip.jumpable(-1) then
-                lausnip.jump(-1)
+                luasnip.jump(-1)
             else
                 fallback()
             end

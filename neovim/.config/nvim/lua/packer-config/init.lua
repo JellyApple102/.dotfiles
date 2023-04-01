@@ -11,6 +11,8 @@ return require('packer').startup(function(use)
 
     -- utils
     use { 'windwp/nvim-autopairs' }
+    use { 'kylechui/nvim-surround' }
+    use { 'windwp/nvim-ts-autotag' }
     use { 'rlane/pounce.nvim' }
     use { 'akinsho/toggleterm.nvim' }
     use {
@@ -27,6 +29,7 @@ return require('packer').startup(function(use)
         run = 'make'
     }
     use { 'nvim-telescope/telescope-ui-select.nvim' }
+    use { 'jakewvincent/mkdnflow.nvim' }
 
     -- LSP
     use { 'neovim/nvim-lspconfig' }
@@ -48,4 +51,8 @@ return require('packer').startup(function(use)
         }
     }
     use { 'onsails/lspkind-nvim' }
+
+    -- personal development
+    use { 'JellyApple102/easyread.nvim' }
+    use { 'JellyApple102/flote.nvim' }
 end)
