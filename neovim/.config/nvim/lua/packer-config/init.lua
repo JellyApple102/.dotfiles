@@ -54,5 +54,7 @@ return require('packer').startup(function(use)
 
     -- personal development
     use { 'JellyApple102/easyread.nvim' }
+    -- use { '~/randprojects/easyread' }
     use { 'JellyApple102/flote.nvim' }
+    -- use { '~/randprojects/flote/' }
 end)

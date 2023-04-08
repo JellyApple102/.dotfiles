@@ -72,7 +72,7 @@ require('toggleterm').setup{
 require('easyread').setup{}
 
 -- flote
-require('flote').setup()
+require('flote').setup{}
 
 -- clear Todo highlight (no weird highlighting in markdown todo lists)
 vim.api.nvim_set_hl(0, 'Todo', {})

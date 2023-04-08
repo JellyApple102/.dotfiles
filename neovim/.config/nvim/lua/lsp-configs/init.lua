@@ -1,5 +1,8 @@
 local lspconfig = require('lspconfig')
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 lspconfig.jedi_language_server.setup{}
 lspconfig.tsserver.setup{}
 
@@ -46,6 +49,11 @@ require('rust-tools').setup{
             other_hints_prefix = "",
         },
     },
+}
+
+-- cssls
+lspconfig.cssls.setup{
+    capabilities = capabilities
 }
 
 -- set diagnostic symbols
