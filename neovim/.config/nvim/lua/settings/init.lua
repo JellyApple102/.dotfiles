@@ -1,6 +1,6 @@
 local opt = vim.opt
 
-vim.g.mapleader = ' '
+-- vim.g.mapleader = ' '
 opt.termguicolors = true
 opt.completeopt = 'menuone,noinsert,noselect'
 opt.number = true
@@ -22,19 +22,22 @@ opt.updatetime = 300
 opt.scrolloff = 5
 opt.sidescrolloff = 5
 opt.cursorline = true
-vim.cmd('syntax enable')
-vim.cmd('filetype plugin indent on')
+-- vim.cmd('syntax enable')
+-- vim.cmd('filetype plugin indent on')
 
-require('kanagawa').setup{
-    colors = {
-        theme = {
-            all = {
-                ui = {
-                    bg_gutter = 'none',
-                }
-            }
-        }
-    }
-}
+-- require('kanagawa').setup{
+--     colors = {
+--         theme = {
+--             all = {
+--                 ui = {
+--                     bg_gutter = 'none',
+--                 }
+--             }
+--         }
+--     }
+-- }
+-- 
+-- vim.cmd('colorscheme kanagawa')
 
-vim.cmd('colorscheme kanagawa')
+-- clear Todo highlight (no weird highlighting in markdown todo lists)
+vim.api.nvim_set_hl(0, 'Todo', {})
