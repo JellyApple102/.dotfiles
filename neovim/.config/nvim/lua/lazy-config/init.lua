@@ -78,11 +78,9 @@ require('lazy').setup({
     {
         'akinsho/toggleterm.nvim',
         version = '*',
-        keys = {
-            { '<C-t>', '<cmd>ToggleTerm<CR>' }
-        },
         config = function()
             require('toggleterm').setup{
+                open_mapping = [[<C-\>]],
                 direction = 'float'
             }
         end
@@ -117,6 +115,7 @@ require('lazy').setup({
     },
     {
         'nvim-telescope/telescope.nvim',
+        cmd = 'Telescope',
         tag = '0.1.1',
         dependencies = {
             'nvim-lua/plenary.nvim',
