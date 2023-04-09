@@ -72,6 +72,16 @@ require('lazy').setup({
             { 's', '<cmd>Pounce<CR>' }
         },
         config = function()
+            local str_color = vim.api.nvim_get_hl(0, { name = 'String' }).fg
+            local num_color = vim.api.nvim_get_hl(0, { name = 'Number' }).fg
+            local const_color = vim.api.nvim_get_hl(0, { name = 'Constant' }).fg
+            local spec_color = vim.api.nvim_get_hl(0, { name = 'Special' }).fg
+            vim.api.nvim_set_hl(0, 'PounceMatch', { bold = true, fg = 'bg', bg = str_color })
+            vim.api.nvim_set_hl(0, 'PounceUnmatched', { link = 'None' })
+            vim.api.nvim_set_hl(0, 'PounceGap', { bold = true, fg = 'bg', bg = num_color })
+            vim.api.nvim_set_hl(0, 'PounceAccept', { bold = true, fg = 'black', bg = const_color })
+            vim.api.nvim_set_hl(0, 'PounceAcceptBest', { bold = true, fg = 'black', bg = spec_color })
+
             require('pounce').setup{}
         end
     },
